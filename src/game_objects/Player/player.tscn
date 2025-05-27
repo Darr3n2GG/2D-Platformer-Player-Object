@@ -1,0 +1,132 @@
+[gd_scene load_steps=20 format=3 uid="uid://ddmm4qgqso2ty"]
+
+[ext_resource type="Script" uid="uid://dt6b1ootbx2cu" path="res://src/game_objects/Player/player.gd" id="1_waowd"]
+[ext_resource type="Script" uid="uid://b1qem1wajd5rq" path="res://src/game_objects/StateMachine/state_machine.gd" id="2_f3ypl"]
+[ext_resource type="Script" uid="uid://c7fdyt6xb7wka" path="res://src/resources/player_jump_resource.gd.gd" id="2_mon83"]
+[ext_resource type="Script" uid="uid://3hkug2nn1xvm" path="res://src/resources/acceleration_resource.gd" id="2_nm2bk"]
+[ext_resource type="Script" uid="uid://dna06av4383dn" path="res://src/game_objects/Player/idle.gd" id="3_barst"]
+[ext_resource type="Script" uid="uid://ltbaktyj1g85" path="res://src/game_objects/Player/walk.gd" id="4_7yvme"]
+[ext_resource type="Script" uid="uid://brwrv0ugvrv2g" path="res://src/game_objects/Player/jump.gd" id="5_7sejk"]
+[ext_resource type="Script" uid="uid://okfpiqpokl2x" path="res://src/game_objects/Player/fall.gd" id="6_vssb6"]
+
+[sub_resource type="Curve" id="Curve_nm2bk"]
+_limits = [0.2, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.2), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_5mqf8"]
+script = ExtResource("2_nm2bk")
+curve = SubResource("Curve_nm2bk")
+time = 0.1
+metadata/_custom_type_script = "uid://3hkug2nn1xvm"
+
+[sub_resource type="Curve" id="Curve_5mqf8"]
+_limits = [0.2, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.12, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_c033j"]
+script = ExtResource("2_nm2bk")
+curve = SubResource("Curve_5mqf8")
+time = 0.05
+metadata/_custom_type_script = "uid://3hkug2nn1xvm"
+
+[sub_resource type="Curve" id="Curve_c033j"]
+_limits = [0.2, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.12, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_5qsel"]
+script = ExtResource("2_nm2bk")
+curve = SubResource("Curve_c033j")
+time = 0.05
+metadata/_custom_type_script = "uid://3hkug2nn1xvm"
+
+[sub_resource type="Resource" id="Resource_e4kym"]
+script = ExtResource("2_mon83")
+player_base = 100.0
+player_low = 50.0
+player_extra = 90.0
+player_to_peak = 0.3
+player_to_descent = 0.25
+metadata/_custom_type_script = "uid://c7fdyt6xb7wka"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8n544"]
+
+[sub_resource type="Animation" id="Animation_6y6ur"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Polygon2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_5neo5"]
+resource_name = "flip"
+length = 0.1667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Polygon2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333, 0.166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.628319, 1.25664, 1.88496, 2.51327, 3.14159]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7uwn8"]
+_data = {
+&"RESET": SubResource("Animation_6y6ur"),
+&"flip": SubResource("Animation_5neo5")
+}
+
+[node name="Player" type="CharacterBody2D"]
+scale = Vector2(1.25, 1.25)
+script = ExtResource("1_waowd")
+acceleration_res = SubResource("Resource_5mqf8")
+deceleration_res = SubResource("Resource_c033j")
+turn_around_res = SubResource("Resource_5qsel")
+jump_resource = SubResource("Resource_e4kym")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-10, -15, -10, 15, 10, 15, 10, -15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_8n544")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_7uwn8")
+}
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_f3ypl")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("3_barst")
+
+[node name="Walk" type="Node" parent="StateMachine"]
+script = ExtResource("4_7yvme")
+
+[node name="Jump" type="Node" parent="StateMachine"]
+script = ExtResource("5_7sejk")
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource("6_vssb6")
+
+[connection signal="timeout" from="CoyoteTimer" to="StateMachine/Fall" method="_on_coyote_timer_timeout"]
