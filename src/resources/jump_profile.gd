@@ -1,4 +1,4 @@
-class_name JumpResource extends Resource
+class_name JumpProfile extends Resource
 
 var base: float
 var to_peak: float

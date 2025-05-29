@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://by7th7037lc0x"]
+
+[ext_resource type="Script" uid="uid://c2im6tkbaxtxo" path="res://src/objects/platforms/LineGround/line_ground.gd" id="1_impjp"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_k7ius"]
+
+[node name="LineGround" type="StaticBody2D"]
+script = ExtResource("1_impjp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("WorldBoundaryShape2D_k7ius")
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(-9.22337e+18, 5, 9.22337e+18, 5)
+default_color = Color(0.647059, 0.164706, 0.164706, 1)

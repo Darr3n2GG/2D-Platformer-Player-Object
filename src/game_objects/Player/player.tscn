@@ -2,44 +2,44 @@
 
 [ext_resource type="Script" uid="uid://dt6b1ootbx2cu" path="res://src/game_objects/Player/player.gd" id="1_waowd"]
 [ext_resource type="Script" uid="uid://b1qem1wajd5rq" path="res://src/game_objects/StateMachine/state_machine.gd" id="2_f3ypl"]
-[ext_resource type="Script" uid="uid://c7fdyt6xb7wka" path="res://src/resources/player_jump_resource.gd.gd" id="2_mon83"]
-[ext_resource type="Script" uid="uid://3hkug2nn1xvm" path="res://src/resources/acceleration_resource.gd" id="2_nm2bk"]
+[ext_resource type="Script" uid="uid://c7fdyt6xb7wka" path="res://src/resources/player_jump_profile.gd" id="2_mon83"]
+[ext_resource type="Script" uid="uid://3hkug2nn1xvm" path="res://src/resources/motion_profile.gd" id="2_nm2bk"]
 [ext_resource type="Script" uid="uid://dna06av4383dn" path="res://src/game_objects/Player/idle.gd" id="3_barst"]
 [ext_resource type="Script" uid="uid://ltbaktyj1g85" path="res://src/game_objects/Player/walk.gd" id="4_7yvme"]
 [ext_resource type="Script" uid="uid://brwrv0ugvrv2g" path="res://src/game_objects/Player/jump.gd" id="5_7sejk"]
 [ext_resource type="Script" uid="uid://okfpiqpokl2x" path="res://src/game_objects/Player/fall.gd" id="6_vssb6"]
 
 [sub_resource type="Curve" id="Curve_nm2bk"]
-_limits = [0.2, 1.0, 0.0, 1.0]
-_data = [Vector2(0, 0.2), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Resource" id="Resource_5mqf8"]
 script = ExtResource("2_nm2bk")
 curve = SubResource("Curve_nm2bk")
 time = 0.1
+min_y = 0.0
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
 
 [sub_resource type="Curve" id="Curve_5mqf8"]
-_limits = [0.2, 1.0, 0.0, 1.0]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.12, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.12, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Resource" id="Resource_c033j"]
 script = ExtResource("2_nm2bk")
 curve = SubResource("Curve_5mqf8")
 time = 0.05
+min_y = 0.0
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
 
 [sub_resource type="Curve" id="Curve_c033j"]
-_limits = [0.2, 1.0, 0.0, 1.0]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.12, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.12, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="Resource" id="Resource_5qsel"]
 script = ExtResource("2_nm2bk")
 curve = SubResource("Curve_c033j")
 time = 0.05
+min_y = 0.0
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
 
 [sub_resource type="Resource" id="Resource_e4kym"]

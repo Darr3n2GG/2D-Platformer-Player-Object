@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3 uid="uid://c0nfn3uloc4b2"]
+
+[ext_resource type="PackedScene" uid="uid://by7th7037lc0x" path="res://src/game_objects/LineGround/line_ground.tscn" id="1_ys0to"]
+[ext_resource type="PackedScene" uid="uid://ddmm4qgqso2ty" path="res://src/game_objects/Player/player.tscn" id="2_1wpl3"]
+[ext_resource type="Script" uid="uid://3hkug2nn1xvm" path="res://src/resources/motion_profile.gd" id="3_1wpl3"]
+
+[sub_resource type="Curve" id="Curve_m5uds"]
+_data = [Vector2(0, 0), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_egtcd"]
+script = ExtResource("3_1wpl3")
+curve = SubResource("Curve_m5uds")
+time = 0.1
+min_y = 0.1
+metadata/_custom_type_script = "uid://3hkug2nn1xvm"
+
+[sub_resource type="Curve" id="Curve_egtcd"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_m5uds"]
+script = ExtResource("3_1wpl3")
+curve = SubResource("Curve_egtcd")
+time = 0.05
+min_y = 0.1
+metadata/_custom_type_script = "uid://3hkug2nn1xvm"
+
+[sub_resource type="Resource" id="Resource_n5vox"]
+script = ExtResource("3_1wpl3")
+curve = SubResource("Curve_egtcd")
+time = 0.025
+min_y = 0.1
+metadata/_custom_type_script = "uid://3hkug2nn1xvm"
+
+[node name="Test" type="Node2D"]
+
+[node name="LineGround" parent="." instance=ExtResource("1_ys0to")]
+
+[node name="Player" parent="." instance=ExtResource("2_1wpl3")]
+position = Vector2(0, -38)
+acceleration_res = SubResource("Resource_egtcd")
+deceleration_res = SubResource("Resource_m5uds")
+turn_around_res = SubResource("Resource_n5vox")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -38)
+scale = Vector2(1.25, 1.25)
+offset = Vector2(0, -90)

@@ -8,8 +8,6 @@ func enter(_previous_state_name: String, _data := {}) -> void:
 func physics_update(delta: float) -> void:
 	if player.velocity.x != 0:
 		player.decelerate(delta)
-	elif player.velocity.x == 0:
-		Debug.update_widget('DebugTextList.add_label', {'name': 'walk_state', 'value': 'Walk state: None'})
 	
 	if player.get_direction():
 		finished.emit(WALK)

@@ -1,10 +1,10 @@
 class_name Player extends CharacterBody2D
 
 @export var max_speed: float = 300.0
-@export var acceleration_res: AccelerationResource
-@export var deceleration_res: AccelerationResource
-@export var turn_around_res: AccelerationResource
-@export var jump_resource: PlayerJumpResource
+@export var acceleration_res: MotionProfile
+@export var deceleration_res: MotionProfile
+@export var turn_around_res: MotionProfile
+@export var jump_resource: PlayerJumpProfile
 @export var max_jump_count: int = 1
 @export var coyote_frames: float = 6.0
 

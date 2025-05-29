@@ -1,4 +1,4 @@
-class_name PlayerJumpResource extends JumpResource
+class_name PlayerJumpProfile extends JumpProfile
 
 @export_group("Jump Height")
 @export var player_base: float:
