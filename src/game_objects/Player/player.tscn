@@ -17,7 +17,7 @@ point_count = 2
 script = ExtResource("2_nm2bk")
 curve = SubResource("Curve_nm2bk")
 time = 0.1
-min_y = 0.0
+min_y = 0.1
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
 
 [sub_resource type="Curve" id="Curve_5mqf8"]
@@ -28,7 +28,7 @@ point_count = 2
 script = ExtResource("2_nm2bk")
 curve = SubResource("Curve_5mqf8")
 time = 0.05
-min_y = 0.0
+min_y = 0.1
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
 
 [sub_resource type="Curve" id="Curve_c033j"]
@@ -39,7 +39,7 @@ point_count = 2
 script = ExtResource("2_nm2bk")
 curve = SubResource("Curve_c033j")
 time = 0.05
-min_y = 0.0
+min_y = 0.1
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
 
 [sub_resource type="Resource" id="Resource_e4kym"]

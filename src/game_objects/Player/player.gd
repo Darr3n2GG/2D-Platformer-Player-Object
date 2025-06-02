@@ -19,6 +19,10 @@ var fall_gravity: float
 var jump_count: int = 0
 var jumping: bool = false
 
+var time_taken: float = 0.0
+var recorded: bool = false
+
+var acceleration_timer: float = 0.0
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var coyote_timer: Timer = $CoyoteTimer
@@ -41,18 +45,33 @@ func walk(delta: float) -> void:
 	elif !direction and velocity.x != 0:
 		decelerate(delta)
 				
-func accelerate(direction: float, delta: float) -> void:
-	base_accelerate(max_speed * direction, acceleration_res.time, acceleration_res.curve, delta)
+func accelerate(direction_: float, delta: float) -> void:
+	if velocity.x == 0.0:
+		print("start acceleration")
+		time_taken = 0.0
+		recorded = false
+	elif abs(velocity.x) == max_speed and not recorded:
+		print("acceleration ended at time: " + str(time_taken))
+		time_taken = 0.0
+		recorded = true
+		
+	if not recorded:
+		time_taken += delta
+		print(velocity.x)
+		
+	if velocity.x == 0.0:
+		acceleration_timer = 0.0
+	base_accelerate(max_speed * direction_, acceleration_res.time, acceleration_res.curve, delta)
 	
 func decelerate(delta: float) -> void:
 	base_accelerate(0, deceleration_res.time, deceleration_res.curve, delta)
 				
-func turn_around(direction: float, delta: float):
-	base_accelerate(direction * max_speed, turn_around_res.time, turn_around_res.curve, delta)
+func turn_around(direction_: float, delta: float):
+	base_accelerate(direction_ * max_speed, turn_around_res.time, turn_around_res.curve, delta)
 
-func base_accelerate(to: float, time: float, curve: Curve, delta: float) -> void:
-	var acceleration = calculate_acceleration(velocity.x, time, max_speed, curve)
-	velocity.x = move_toward(velocity.x, to, acceleration * delta)
+func base_accelerate(to_: float, time_: float, curve_: Curve, delta: float) -> void:
+	var acceleration_ = calculate_acceleration(velocity.x, time_, max_speed, curve_)
+	velocity.x = acceleration_ * sign(to_)
 	
 func base_jump() -> void:
 	jump(base_jump_velocity)
@@ -61,29 +80,32 @@ func extra_jump() -> void:
 	jump(extra_jump_velocity)
 	animation_player.play("flip")
 	
-func base_wall_jump(direction_x : float) -> void:
-	wall_jump(base_jump_velocity, direction_x)
+func base_wall_jump(direction_: float) -> void:
+	wall_jump(base_jump_velocity, direction_)
 		
-func jump(jump_velocity : float) -> void:
-	velocity.y = jump_velocity
+func jump(jump_velocity_: float) -> void:
+	velocity.y = jump_velocity_
 	jump_count += 1
 	jumping = true
 	
-func wall_jump(jump_velocity : float, direction_x : float) -> void:
-	velocity = Vector2(direction_x * -1, 1.0) * jump_velocity
+func wall_jump(jump_velocity_: float, direction_: float) -> void:
+	velocity = Vector2(direction_ * -1, 1.0) * jump_velocity_
 	jump_count += 1
 	jumping = true
 	
-func apply_gravity(delta: float, gravity: float) -> void:
-	velocity.y += gravity * delta
+func apply_gravity(delta_: float, gravity_: float) -> void:
+	velocity.y += gravity_ * delta_
 				
 func get_direction() -> float:
 	return Input.get_axis("move_left", "move_right")
 	
-func calculate_acceleration(initial_x_: float, time_: float, max_: float, curve_: Curve) -> float:
-	var t = clamp(abs(initial_x_) / max_, 0.0, 1.0)
-	var curve_factor = curve_.sample_baked(t)
-	return (max_ / time_) * curve_factor
+func calculate_acceleration(x_: float, time_: float, max_: float, curve_: Curve, time_step := 0.01) -> float:
+	var curve_factor = get_curve_factor(x_, max_, curve_)
+	return max_ * curve_factor
+	
+func get_curve_factor(x_: float, max_: float, curve_: Curve) -> float:
+	var t = clamp(abs(x_) / max_, 0.0, 1.0)
+	return curve_.sample_baked(t)
 	
 func set_jump_variables() -> void:
 	base_jump_velocity = jump_resource.calculate_base_jump_velocity()
@@ -97,7 +119,7 @@ func set_coyote_wait_time() -> void:
 	coyote_timer.wait_time = coyote_frames / 60.0
 	
 	
-####### Unused ########	
+#------------------- UNUSED -------------------#	
 func calculate_smaple_offset(delta: float, bake_resolution: int, target_sample_time := 1.0 / 60.0) -> float:
 	var step_size = 1.0 / bake_resolution
 	return step_size * (delta / target_sample_time)
