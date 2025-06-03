@@ -47,6 +47,7 @@ func walk(delta: float) -> void:
 		decelerate(delta)
 	elif direction == 0:
 		motion_behaviour.update_state("stationary")
+	print(velocity.x)
 						
 func accelerate(direction_: float, delta: float) -> void:
 	motion_behaviour.update_state("acceleration")

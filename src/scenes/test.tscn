@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://c0nfn3uloc4b2"]
+[gd_scene load_steps=12 format=3 uid="uid://c0nfn3uloc4b2"]
 
 [ext_resource type="PackedScene" uid="uid://by7th7037lc0x" path="res://src/game_objects/LineGround/line_ground.tscn" id="1_ys0to"]
 [ext_resource type="PackedScene" uid="uid://ddmm4qgqso2ty" path="res://src/game_objects/Player/player.tscn" id="2_1wpl3"]
 [ext_resource type="Script" uid="uid://3hkug2nn1xvm" path="res://src/resources/motion_profile.gd" id="3_1wpl3"]
+[ext_resource type="Script" uid="uid://c7fdyt6xb7wka" path="res://src/resources/player_jump_profile.gd" id="4_m5uds"]
 
 [sub_resource type="Curve" id="Curve_m5uds"]
 _data = [Vector2(0, 0), 0.0, 1.4, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -26,12 +27,25 @@ time = 0.05
 min_y = 0.01
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
 
+[sub_resource type="Curve" id="Curve_n5vox"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
 [sub_resource type="Resource" id="Resource_n5vox"]
 script = ExtResource("3_1wpl3")
-curve = SubResource("Curve_egtcd")
+curve = SubResource("Curve_n5vox")
 time = 0.05
 min_y = 0.01
 metadata/_custom_type_script = "uid://3hkug2nn1xvm"
+
+[sub_resource type="Resource" id="Resource_fen8a"]
+script = ExtResource("4_m5uds")
+player_base = 100.0
+player_low = 50.0
+player_extra = 75.0
+player_to_peak = 0.3
+player_to_descent = 0.25
+metadata/_custom_type_script = "uid://c7fdyt6xb7wka"
 
 [node name="Test" type="Node2D"]
 
@@ -42,6 +56,7 @@ position = Vector2(0, -38)
 acceleration_res = SubResource("Resource_egtcd")
 deceleration_res = SubResource("Resource_m5uds")
 turn_around_res = SubResource("Resource_n5vox")
+jump_resource = SubResource("Resource_fen8a")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -38)
