@@ -33,6 +33,7 @@ func jump_fall(delta: float) -> void:
 
 ## Getting the jump gravity depending on the player's current state.[br]
 ## states: full jumping, low jumping, extra jumping
+# TODO: maybe use enums to track state
 func get_jump_gravity() -> float:
 	if player.jump_count < 2:
 		if not jump_released:
