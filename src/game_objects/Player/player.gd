@@ -19,10 +19,7 @@ var fall_gravity: float
 var jump_count: int = 0
 var jumping: bool = false
 
-var time_taken: float = 0.0
-var recorded: bool = false
-
-var acceleration_timer: float = 0.0
+var motion_behaviour := MotionBehaviour.new()
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var coyote_timer: Timer = $CoyoteTimer
@@ -32,46 +29,39 @@ func _ready() -> void:
 	set_jump_variables()
 	set_coyote_wait_time()
 	
+func _physics_process(delta: float) -> void:
+	motion_behaviour.update_motion(delta, velocity.x)
+	
+	
 func fall(delta: float) -> void:
 	if not is_on_floor():
 		apply_gravity(delta, fall_gravity)
 
 func walk(delta: float) -> void:
 	var direction := get_direction()
-	if direction != 0 and direction != sign(velocity.x) and velocity.x != 0:
-		turn_around(direction, delta)
+	if direction != sign(velocity.x) and velocity.x != 0:
+		turn_around(delta)
 	elif direction:
 		accelerate(direction, delta)
 	elif !direction and velocity.x != 0:
 		decelerate(delta)
-				
+	elif direction == 0:
+		motion_behaviour.update_state("stationary")
+						
 func accelerate(direction_: float, delta: float) -> void:
-	if velocity.x == 0.0:
-		print("start acceleration")
-		time_taken = 0.0
-		recorded = false
-	elif abs(velocity.x) == max_speed and not recorded:
-		print("acceleration ended at time: " + str(time_taken))
-		time_taken = 0.0
-		recorded = true
-		
-	if not recorded:
-		time_taken += delta
-		print(velocity.x)
-		
-	if velocity.x == 0.0:
-		acceleration_timer = 0.0
+	motion_behaviour.update_state("acceleration")
 	base_accelerate(max_speed * direction_, acceleration_res.time, acceleration_res.curve, delta)
 	
 func decelerate(delta: float) -> void:
+	motion_behaviour.update_state("deceleration")
 	base_accelerate(0, deceleration_res.time, deceleration_res.curve, delta)
 				
-func turn_around(direction_: float, delta: float):
-	base_accelerate(direction_ * max_speed, turn_around_res.time, turn_around_res.curve, delta)
-
+func turn_around(delta: float):
+	motion_behaviour.update_state("turn_around")
+	base_accelerate(0, turn_around_res.time, turn_around_res.curve, delta)
+	
 func base_accelerate(to_: float, time_: float, curve_: Curve, delta: float) -> void:
-	var acceleration_ = calculate_acceleration(velocity.x, time_, max_speed, curve_)
-	velocity.x = acceleration_ * sign(to_)
+	velocity.x = motion_behaviour.calculate_acceleration(velocity.x, to_, max_speed, time_, curve_, delta)
 	
 func base_jump() -> void:
 	jump(base_jump_velocity)
@@ -99,14 +89,6 @@ func apply_gravity(delta_: float, gravity_: float) -> void:
 func get_direction() -> float:
 	return Input.get_axis("move_left", "move_right")
 	
-func calculate_acceleration(x_: float, time_: float, max_: float, curve_: Curve, time_step := 0.01) -> float:
-	var curve_factor = get_curve_factor(x_, max_, curve_)
-	return max_ * curve_factor
-	
-func get_curve_factor(x_: float, max_: float, curve_: Curve) -> float:
-	var t = clamp(abs(x_) / max_, 0.0, 1.0)
-	return curve_.sample_baked(t)
-	
 func set_jump_variables() -> void:
 	base_jump_velocity = jump_resource.calculate_base_jump_velocity()
 	extra_jump_velocity =  jump_resource.calculate_extra_jump_velocity()
@@ -128,3 +110,7 @@ func calculate_curve_delta(curve: Curve, sample_offset: float) -> float:
 	var t1 = clamp(abs(velocity.x) / max_speed, 0.0, 1.0)
 	var t2 = clamp(t1 + sample_offset, 0.0, 1.0)
 	return curve.sample_baked(t2) - curve.sample_baked(t1)
+	
+func get_curve_factor(x_: float, max_: float, curve_: Curve) -> float:
+	var t = clamp(abs(x_) / max_, 0.0, 1.0)
+	return curve_.sample_baked(t)
