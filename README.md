@@ -3,3 +3,6 @@ Cofigurable base player object for 2d platformers
 
 ## Acceleration types
 Currently it supports non-linear, linear, constant and zero acceleration, which you can change through a curve, time to accelerate and max speed ( motion_profile.gd ).
+
+## Configurable Jump
+Configurable jump height, time to ascend and time to descend.
